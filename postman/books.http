@@ -1,0 +1,18 @@
+### POST
+POST localhost:8080/mylibapi/book
+Content-Type: application/json
+
+{
+  "title": "my book",
+  "author" : "Bruno",
+  "year" : 2024,
+  "publisher" : "Editora",
+  "subject" : "Business",
+  "status" : "NOVO"
+}
+
+### GET THE LIST
+GET localhost:8080/mylibapi/book
+
+### GET SPECIFIC FIRST
+GET localhost:8080/mylibapi/book/2
