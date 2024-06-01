@@ -48,8 +48,10 @@ class SecurityConfig (val jwtTokenFilter: JwtTokenFilter) {
                     requests
                             .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET)).permitAll()
                             .requestMatchers(mvc.pattern(HttpMethod.POST, "/book")).permitAll()
+                            .requestMatchers(HttpMethod.PUT, "/book/**").permitAll()
+                            .requestMatchers(HttpMethod.POST, "/subjects/**").permitAll()
+                            .requestMatchers(HttpMethod.PUT, "/book/*/subjects/*").permitAll()
                             .requestMatchers(mvc.pattern(HttpMethod.POST, "/book/login")).permitAll()
-                            //.requestMatchers(mvc.pattern(HttpMethod.DELETE, "/book")).hasRole("ADMIN")
                             .requestMatchers(mvc.pattern(HttpMethod.DELETE, "/book/**")).hasRole("ADMIN")
                             .anyRequest().authenticated()
                 }

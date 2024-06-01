@@ -56,8 +56,25 @@ class BookService (
         return true
     }
 
+    fun update(id: Long, bookRequest: BookRequest): Book? {
+        val existingBook = bookRepository.findByIdOrNull(id)
+        return if (existingBook != null) {
+            log.warn("Book Encontrado")
+            bookRequest.title?.let { existingBook.title = it }
+            bookRequest.author?.let { existingBook.author = it }
+            bookRequest.year?.let { existingBook.pubYear = it }
+            bookRequest.publisher?.let { existingBook.publisher = it }
+            bookRequest.status?.let { existingBook.status = it }
+            bookRepository.save(existingBook)
+        } else {
+            log.warn("Update não realizado, livro não encontrado")
+            null
+        }
+    }
 
-    ////APROVEITANDO CLASSE FUNÇÃO DE LOGIN
+
+
+    ////APROVEITANDO CLASSE PARA FUNÇÃO DE LOGIN DE USUÁRIO
     fun login(name: String, password: String): LoginResponse? {
         val user = User()
 

@@ -1,5 +1,7 @@
 package br.pucpr.libserver.books
 
+import br.pucpr.libserver.expection.ForbiddenException
+import br.pucpr.libserver.expection.NotFoundException
 import br.pucpr.libserver.security.LoginRequest
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import jakarta.validation.Valid
@@ -42,14 +44,12 @@ class BookController (val bookService: BookService) {
     fun deleteById(@PathVariable id: Long): ResponseEntity<Void> =
         bookService.delete(id)
                 ?.let { ResponseEntity.ok().build() }
-                ?: ResponseEntity.notFound().build()
+                ?: throw NotFoundException("Book Not Found")
 
     @PutMapping("/{id}/subjects/{subject}")
-    fun addSubject(
-            @PathVariable id: Long,
-            @PathVariable subject: String
-    ): ResponseEntity<Void> =
-            if (bookService.addSubject(id, subject)) { ResponseEntity.ok().build() }
+    fun addSubject(@PathVariable id: Long, @PathVariable subject: String): ResponseEntity<Void> =
+            if (bookService.addSubject(id, subject))
+            { ResponseEntity.ok().build() }
             else ResponseEntity.noContent().build()
 
     @PostMapping("/login")
@@ -66,6 +66,16 @@ class BookController (val bookService: BookService) {
             ResponseEntity.ok(book)
         } else {
             ResponseEntity.notFound().build()
+        }
+    }
+
+    @PutMapping("/{id}")
+    fun updateBook(@PathVariable id: Long, @RequestBody @Valid bookRequest: BookRequest): ResponseEntity<Book> {
+        val updatedBook = bookService.update(id, bookRequest)
+        return if (updatedBook != null) {
+            ResponseEntity.ok(updatedBook)
+        } else {
+            ResponseEntity.status(HttpStatus.NOT_FOUND).build()
         }
     }
 
